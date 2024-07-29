@@ -1,36 +1,60 @@
-@import url(https://fonts.googleapis.com/css2?family=Jost:wght@300);
+@import url(https://fonts.googleapis.com/css2?family=Jost:wght@300); /* Importing Jost font from Google Fonts */
 
+/* Resetting margin, padding, and box-sizing for all elements */
 *,
 *::before,
 *::after {
     margin: 0;
-    padding: 0%;
+    padding: 0;
     box-sizing: border-box;
 }
 
-html{
+/* Setting the base font size and font family for the HTML document */
+html {
     font-size: 62.5%;
-    font-family: "jost", sans-serif;
+    font-family: "Jost", sans-serif;
 }
 
+/* Styling the body element */
+body {
+    background-color: #111; /* Default background color */
+    background-size: cover; /* Cover the whole background area */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat; /* Do not repeat the background image */
+    transition: background-image 0.5s ease-in-out; /* Smooth transition for background image changes */
+}
+
+/* Styling for the blurred background effect */
+.background-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(10px); /* Applying blur effect */
+    z-index: -1; /* Ensure it stays behind other content */
+}
+
+/* Main container for centering the music player */
 .main_div {
     width: 100vw;
     height: 100vh;
-    background-color: #f6f6f6;
     display: grid;
     place-items: center;
+    backdrop-filter: blur(10px); /* Additional blur effect for the main container */
 }
 
-.music_container{
+/* Container for the music player */
+.music_container {
     width: 35rem;
-    height: 55rem;
     background-color: #ffffff;
     border-radius: 2rem;
-    box-shadow: 0 1.2rem 3rem 0.5rem rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1.2rem 3rem 0.5rem rgba(0, 0, 0, 0.2); /* Adding shadow effect */
     padding: 3rem;
     text-align: center;
 }
 
+/* Styling the song title */
 .music_container #title {
     text-transform: uppercase;
     letter-spacing: 0.2rem;
@@ -39,11 +63,12 @@ html{
     margin: 2rem 0 0.5rem 0;
     font-size: 2.5rem;
     font-weight: 500;
-    text-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.3);
+    text-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.3); /* Adding shadow to the text */
 }
 
-.music_container #artist{
-    color: #cccaca;
+/* Styling the artist name */
+.music_container #artist {
+    color: #a19f9f;
     text-transform: capitalize;
     letter-spacing: 0.1rem;
     font-size: 2rem;
@@ -51,38 +76,76 @@ html{
     font-weight: 300;
 }
 
+/* Container for the song image */
 .img_container {
     width: 25rem;
     height: 25rem;
     margin: auto;
 }
 
-img{
+/* Styling for the song image */
+img {
     width: 100%;
     height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    box-shadow: 0 1.2rem 3rem 0.5rem rgba(0, 0, 0, 0.4);
+    border-radius: 50%; /* Making the image circular */
+    object-fit: cover; /* Ensuring the image covers the entire area */
+    box-shadow: 0 1.2rem 3rem 0.5rem rgba(0, 0, 0, 0.4); /* Adding shadow effect */
 }
 
+/* Container for the progress bar */
+.progress_container {
+    width: 100%;
+    height: 1rem;
+    background: #e0e0e0; /* Background color for the progress bar container */
+    border-radius: 0.5rem;
+    margin: 2rem 0;
+    position: relative;
+}
+
+/* Styling for the progress bar */
+.progress_bar {
+    width: 0; /* Initially set the width to 0 */
+    height: 100%;
+    background-color: #111; /* Progress bar color */
+    border-radius: 0.5rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Container for the music control buttons */
 .music_controls {
-    width: 20rem;
+    width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
     margin: auto;
-    margin-top: 5rem;
-
+    margin-top: 2rem;
 }
 
-.music_controls .fas{
+/* Styling for the control buttons */
+.music_controls .fas {
     color: #111111;
     font-size: 2rem;
     cursor: pointer;
-    filter: drop-shadow(0 1.2rem 3rem 0.5rem rgba(0, 0, 0, 0.4));
+    filter: drop-shadow(0 1.2rem 3rem 0.5rem rgba(0, 0, 0, 0.4)); /* Adding shadow effect */
 }
 
-.music_controls .main_button{
+/* Hover effect for the control buttons */
+.music_controls .fas:hover {
+    color: grey;
+    transform: scale(1.1); /* Slightly enlarging the button */
+}
+
+/* Hover effect for the play button */
+.music_controls .fa-play:hover {
+    background-color: #f6f6f6;
+    color: #111;
+    box-shadow: 0 1rem 2rem 0.2rem rgba(0, 0, 0, 0.4); /* Adding shadow effect */
+}
+
+/* Styling for the main play/pause button */
+.music_controls .main_button {
     width: 5rem;
     height: 5rem;
     border-radius: 50%;
@@ -92,23 +155,37 @@ img{
     justify-content: center;
     align-items: center;
     font-size: 1.4rem;
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition for background color and size */
 }
 
-.music_controls .fas:hover{
-    color: grey;
-}
-
-.music_controls .fa-play:hover{
-    background-color: #f6f6f6;
+/* Container for the volume control slider */
+.volume_container {
+    width: 20rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    display: none; /* Initially hidden */
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 15rem;
+    top: auto;
+    right: 51.5rem;
+    left: auto;
     color: #111;
-    box-shadow: 0 1rem 2rem 0.2rem rgba(0, 0, 0, 0.4);
 }
 
-.anime {
-    animation: rotatePlayer 3s linear infinite;
+/* Styling for the volume icon */
+#volume-icon {
+    margin-left: 1rem;
 }
 
-@keyframes rotatePlayer {
-    from { transform: rotate(0deg);}
-    to { transform: rotate(360deg);}
+/* Styling for the volume slider */
+#volume {
+    width: 30%;
+    background-color: black;
+}
+
+/* Show the volume container when it has the 'show' class */
+.volume_container.show {
+    display: flex;
 }

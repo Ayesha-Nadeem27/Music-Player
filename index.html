@@ -3,115 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" integrity="sha512-PgQMlq+nqFLV4ylk1gwUOgm6CtIIXkKwaIHp/PAIWHzig/lKZSEGKEysh0TCVbHJXCLN7WetD8TFecIky75ZfQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />    
+    <title>Music Player</title>
+
+    <!-- Link to Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" integrity="sha512-PgQMlq+nqFLV4ylk1gwUOgm6CtIIXkKwaIHp/PAIWHzig/lKZSEGKEysh0TCVbHJXCLN7WetD8TFecIky75ZfQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Link to external CSS file -->
     <link rel="stylesheet" href="css/style.css">
-
 </head>
-<body>
+<body onload="initializeBackground()">
     
-<div class="main_div">
-    <div class="music_container">
-        <h2 id="title">Tera Main Intizaar</h2>
-        <h3 id="artist">Armaan Malik</h3>
-        <div class="img_container">
-            <img src="images/song_1.jpg" alt=""> 
-        </div>
-        <audio src="music/song_1.mp3" ></audio>
+    <!-- Div for background blur effect -->
+    <div class="background-blur"></div>
 
-        <div class="music_controls">
-            <i class="fas fa-backward"           id="prev" title="Previous"></i>
-            <i class="fas fa-play main_button"   id="play" title="Play"></i>
-            <i class="fas fa-forward"            id="next" title="Next"></i>
+    <!-- Main container for the music player -->
+    <div class="main_div">
+        <div class="music_container">
+            <h2 id="title">Tera Main Intizaar</h2>
+            <h3 id="artist">Armaan Malik</h3>
+
+            <!-- Container for song image -->
+            <div class="img_container">
+                <img src="images/song_1.jpg" alt=""> 
+            </div>
+
+            <!-- Audio element for music playback -->
+            <audio src="music/song_1.mp3"></audio>
+
+            <!-- Progress bar container -->
+            <div class="progress_container">
+                <div class="progress_bar" id="progress"></div>
+            </div>
+
+            <!-- Music control buttons -->
+            <div class="music_controls">
+                <i class="fas fa-backward" id="prev" title="Previous"></i>
+                <i class="fas fa-play main_button" id="play" title="Play"></i>
+                <i class="fas fa-forward" id="next" title="Next"></i>
+                <i class="fas fa-volume-up" id="volume-icon" title="Volume"></i>
+
+                <!-- Volume control slider -->
+                <div class="volume_container" id="volume-container">
+                    <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
+                </div>
+            </div>
         </div>
     </div>
-</div>
-<script>
-    const music = document.querySelector("audio");
-    const img = document.querySelector('img');
-    const play = document.getElementById("play");
-    const artist = document.getElementById("artist");
-    const title = document.getElementById("title");
-    const prev = document.getElementById("prev");
-    const next = document.getElementById("next");
+    <script>
 
-    const songs = [
-    {
-        name:"song_1",
-        title: "Tera Main Intizaar",
-        artist: "Armaan Malik",
-    },
-    {
-        name:"song_2",
-        title: "Bol Do Na Zara",
-        artist: "Armaan Malik",
-    },
-    {
-        name:"song_3",
-        title: "Pyaar Ek Tarfa",
-        artist: "Amaal Malik",
-    },
-    {
-        name:"song_4",
-        title: "Mujhko Barsaat",
-        artist: "Armaan Malik",
-    },
-    {
-        name:"song_5",
-        title: "Tum Hi Ho",
-        artist: "Arjit Singh",
-    },
-];
+        // Selecting elements from the DOM
+        const music = document.querySelector("audio");
+        const img = document.querySelector('img');
+        const play = document.getElementById("play");
+        const artist = document.getElementById("artist");
+        const title = document.getElementById("title");
+        const prev = document.getElementById("prev");
+        const next = document.getElementById("next");
+        const progress = document.getElementById('progress');
+        const progress_container = document.querySelector('.progress_container');
+        const volumeIcon = document.getElementById('volume-icon');
+        const volumeContainer = document.getElementById('volume-container');
+        const volumeControl = document.getElementById('volume');
 
-    let isPlaying = false;
+        // Array of songs
+        const songs = [
+            { name: "song_1", title: "Tera Main Intizaar", artist: "Armaan Malik" },
+            { name: "song_2", title: "Bol Do Na Zara", artist: "Armaan Malik" },
+            { name: "song_3", title: "Pyaar Ek Tarfa", artist: "Amaal Malik" },
+            { name: "song_4", title: "Mujhko Barsaat", artist: "Armaan Malik" },
+            { name: "song_5", title: "Tum Hi Ho", artist: "Arjit Singh" },
+        ];
 
-// for play funtionality     
-    const playMusic= ()=> {
-        isPlaying = true;
-        music.play();
-        play.classList.replace('fa-play', "fa-pause");
-        img.classList.add("anime");
-    };
+        let isPlaying = false; // Track if the music is playing
+        let songIndex = 0;    // Track the current song index
 
-// for pause funtionality     
-    const pauseMusic= ()=> {
-        isPlaying = false;
-        music.pause();
-        play.classList.replace('fa-pause', "fa-play");
-        img.classList.remove("anime");
-    };
+        // Function to play music
+        const playMusic = () => {
+            isPlaying = true;
+            music.play();
+            play.classList.replace('fa-play', "fa-pause");
+            play.title = "Pause";
+            img.classList.add("anime");
+            document.body.style.background = `linear-gradient(135deg, ${getColorFromImage(img)}, #111)`;
+        };
 
-    play.addEventListener('click', () => {
-    
-        isPlaying ? pauseMusic() :playMusic();
-    });
+        // Function to pause music
+        const pauseMusic = () => {
+            isPlaying = false;
+            music.pause();
+            play.classList.replace('fa-pause', "fa-play");
+            play.title = "play";
+            img.classList.remove("anime");
+        };
 
-    //changing the music data
+        // Event listener to play or pause music on button click
+        play.addEventListener('click', () => {
+            isPlaying ? pauseMusic() : playMusic();
+        });
 
-    const loadSongs =(songs) => {
-        title.textContent = songs.title;
-        artist.textContent = songs.artist;
-        music.src ="music/" + songs.name + ".mp3";
-        img.src ="images/" + songs.name + ".jpg";
+        // Function to load songs
+        const loadSongs = (song) => {
+            title.textContent = song.title;
+            artist.textContent = song.artist;
+            music.src = "music/" + song.name + ".mp3";
+            img.src = "images/" + song.name + ".jpg";
+            document.body.style.backgroundImage = `url(${img.src})`;
+        };
 
-    };
+        // Function to play the next song
+        const nextSong = () => {
+            songIndex = (songIndex + 1) % songs.length;
+            loadSongs(songs[songIndex]);
+            playMusic();
+        };
 
-    songIndex =0;
-    const nextSong = () => {
-        songIndex = (songIndex +1) % songs.length;
-        loadSongs(songs[songIndex]);
-        playMusic();
-    };
+        // Function to play the previous song
+        const prevSong = () => {
+            songIndex = (songIndex - 1 + songs.length) % songs.length;
+            loadSongs(songs[songIndex]);
+            playMusic();
+        };
 
-    const prevSong = () => {
-        songIndex = (songIndex - 1 + songs.length ) % songs.length;
-        loadSongs(songs[songIndex]);
-        playMusic();
-    };
+        // Event listeners for next and previous buttons
+        next.addEventListener('click', nextSong);
+        prev.addEventListener('click', prevSong);
 
-    next.addEventListener('click', nextSong);
-    prev.addEventListener('click', prevSong);
+        // Update progress bar as the song plays
+        music.addEventListener('timeupdate', (e) => {
+            const { currentTime, duration } = e.srcElement;
+            const progressPercent = (currentTime / duration) * 100;
+            progress.style.width = `${progressPercent}%`;
+        });
 
-</script>
+        // Seek to a point in the song when progress bar is clicked
+        progress_container.addEventListener('click', (e) => {
+            const width = progress_container.clientWidth;
+            const clickX = e.offsetX;
+            const duration = music.duration;
+            music.currentTime = (clickX / width) * duration;
+        });
+
+        // Toggle volume control visibility
+        volumeIcon.addEventListener('click', () => {
+            volumeContainer.classList.toggle('show');
+        });
+
+        // Adjust volume based on slider input
+        volumeControl.addEventListener('input', (e) => {
+            music.volume = e.target.value;
+        });
+
+        // Initialize background image and apply blur effect
+        function initializeBackground() {
+            const img = document.querySelector('.img_container img');
+            img.onload = function() {
+                document.body.style.backgroundImage = `url(${img.src})`;
+            };
+            img.src = 'images/song_1.jpg'; 
+        }
+    </script>
 </body>
 </html>
