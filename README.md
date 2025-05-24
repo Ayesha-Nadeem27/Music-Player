@@ -29,6 +29,7 @@ A stylish and functional web-based music player built using HTML, CSS, and JavaS
 1. Clone the repository:
    ```bash
    git clone https://github.com/Ayesha-Nadeem27/Music-Player
+   
 2 . Open the file in your browser:
    ```bash
-   index.html
+     index.html
