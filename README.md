@@ -32,4 +32,4 @@ A stylish and functional web-based music player built using HTML, CSS, and JavaS
    
 2 . Open the file in your browser:
    ```bash
-     index.html
+index.html
